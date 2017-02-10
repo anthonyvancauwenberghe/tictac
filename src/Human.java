@@ -11,7 +11,7 @@ public class Human extends Player {
         this.playerID = 2;
     }
 
-    public void move() {
+    public int move() {
         Scanner reader = new Scanner(System.in);
 
         System.out.println("");
@@ -24,9 +24,12 @@ public class Human extends Player {
 
         verifyMove(x, y);
 
+        System.out.println(getGrid().toString());
+        return x + getGrid().getSize()*y;
     }
 
-    private void verifyMove(int x, int y) {
+    @Override
+    protected void verifyMove(int x, int y) {
         if (getGrid().getCoordinate(x, y).getContent() == 0)
             fillCoordinate(x, y, getPlayerID());
         else {
@@ -37,6 +40,6 @@ public class Human extends Player {
             move();
         }
 
-        System.out.println(getGrid().toString());
+
     }
 }

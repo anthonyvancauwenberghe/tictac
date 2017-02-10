@@ -7,7 +7,7 @@ abstract public class Player {
     /* Since we are only using one player i'm not going to use it */
     protected int playerID;
 
-    abstract public void move();
+    abstract public int move();
 
     protected void fillCoordinate(int x, int y, int playerID) {
         Game.getInstance().getGrid().getCoordinate(x, y).setContent(playerID);
@@ -19,5 +19,13 @@ abstract public class Player {
 
     public int getPlayerID() {
         return playerID;
+    }
+
+    protected void verifyMove(int x, int y) {
+        if (getGrid().getCoordinate(x, y).getContent() == 0)
+            fillCoordinate(x, y, getPlayerID());
+        else {
+            move();
+        }
     }
 }
