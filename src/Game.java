@@ -4,7 +4,7 @@ import java.util.Scanner;
  * Created by tony on 10/02/2017.
  */
 public class Game {
-    private static int boardSize = 3;
+    private static int boardSize = 9;
     private static Game instance = null;
 
     private Grid grid;
@@ -26,33 +26,96 @@ public class Game {
     }
 
     private void startGame() {
+        while(true){
 
-        while (gameContinueing) {
-            if(!gameFinished()){
-                human.move();
+            while (gameContinueing) {
+                if (!gameFinished()) {
+                    human.move();
+                } else {
+                    //TODO: ADD PLAYSEQUENCE TO DECISSION TREE HERE
+                    break;
+                }
+
+                if (!gameFinished()) {
+                    bot.move();
+                } else {
+                    break;
+                }
+
             }
-
-
-            if(!gameFinished())
-            bot.move();
+            grid.resetGrid();
         }
 
     }
 
-
-    private boolean gameFinished(){
-        int[][] grid = this.grid.generateGridArray();
-        int size = Game.boardSize;
-
+    private boolean horizontalRowSequence(int[][] grid){
+        int size = boardSize;
         for (int y = 0; y < size; y++) {
+            int playerID = 0;
+            int successfullRows = 0;
+
             for (int x = 0; x < size; x++) {
-                if(grid[x][y]==0)
-                    break;
+                if (grid[x][y] != 0) {
+
+
+                    if (x == 0) {
+                        playerID = grid[x][y];
+                        successfullRows = 1;
+                    } else {
+
+                        if (playerID == grid[x][y]) {
+                            successfullRows++;
+                        } else {
+                            playerID = grid[x][y];
+                            successfullRows = 1;
+                        }
+                    }
+
+                    if (successfullRows >= 3) {
+                        return true;
+                    }
+                }
+
             }
 
         }
         return false;
     }
+
+    private int[][] transposeArray(int[][] matrix){
+        for(int i = 0; i < boardSize; i++) {
+            for(int j = i+1; j < boardSize; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        return matrix;
+    }
+
+
+    private boolean gameFinished() {
+        int[][] grid = this.grid.generateGridArray();
+
+        /* CHECK FOR HORIZONTAL SEQUENCE */
+        if(horizontalRowSequence(grid)){
+            System.out.println("Game Finished");
+            return true;
+        }
+
+        /* CHECK FOR VERTICAL SEQUENCE */
+        if(horizontalRowSequence(transposeArray(grid))){
+            System.out.println("Game Finished");
+            return true;
+        }
+
+
+        return false;
+    }
+
+
+
+
 
     public static Game getInstance() {
         if (instance == null) {

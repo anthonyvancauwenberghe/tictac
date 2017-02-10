@@ -3,34 +3,16 @@ import java.util.Scanner;
 /**
  * Created by tony on 10/02/2017.
  */
-public class Bot implements Player {
-
-    /* If there are multiple players we could set PlayerID's so coded the structure like this */
-    /* Since we are only using one player i'm not going to use it */
-    private int playerID;
+public class Bot extends Player {
 
     public Bot() {
         /* Bot has PlayerID 1! */
         this.playerID = 1;
     }
 
-    private Grid getGrid(){
-        return Game.getInstance().getGrid();
-    }
-
-    @Override
-    public void fillCoordinate(int x, int y) {
-        Game.getInstance().getGrid().getCoordinate(x, y).setContent(getPlayerID());
-    }
-
-    public int getPlayerID() {
-        return playerID;
-    }
-
     public void move(){
         botIsThinking();
     }
-
 
 
     public void botIsThinking() {
