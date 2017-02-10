@@ -37,12 +37,22 @@ public class Game {
                     break;
                 }
 
+                if(allCoordinatesFilled()){
+                    System.out.println("It's a draw!");
+                    break;
+                }
+
                 if (!gameFinished()) {
                     bot.isThinking();
                     int move = bot.move();
                     sequence.addDecission(move);
                 } else {
                     sequence.addWonGameSequence();
+                    break;
+                }
+
+                if(allCoordinatesFilled()){
+                    System.out.println("It's a draw!");
                     break;
                 }
 
