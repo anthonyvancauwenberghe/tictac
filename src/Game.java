@@ -7,7 +7,8 @@ public class Game {
 
     private Grid grid;
     private Bot bot;
-    private Human human;
+    private Player human;
+    private Tree tree;
     private GameSequences sequence;
     private boolean gameContinueing;
 
@@ -15,6 +16,7 @@ public class Game {
         this.grid = new Grid(boardSize);
         this.bot = new Bot();
         this.human = new Human();
+
         this.gameContinueing = true;
         this.sequence = new GameSequences();
 
@@ -25,38 +27,106 @@ public class Game {
         return this.grid;
     }
 
+    public GameSequences getSequence() {
+        return this.sequence;
+    }
+
+    public Tree getTree() {
+        return tree;
+    }
+
+    public int generateNodeMoveNumber(int move) {
+        int size = boardSize;
+        int[][] grid = this.grid.generateGridArray();
+
+        int amountAvailableCoordinates = 0;
+        int amountCoordinates = 0;
+
+        int moveNumber = move;
+
+        outerloop:
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                amountCoordinates++;
+
+                if (grid[x][y] == 0) {
+                    amountAvailableCoordinates++;
+                }
+
+                if (amountCoordinates == move) {
+                    moveNumber = amountAvailableCoordinates;
+                    break outerloop;
+                }
+
+
+            }
+
+        }
+
+        return moveNumber;
+    }
+
     private void startGame() {
+        this.tree = new Tree();
         while (true) {
 
             while (gameContinueing) {
                 if (!gameFinished()) {
                     int move = human.move();
-                    sequence.addDecission(move);
+
+
+                    try{
+                        sequence.addDecission(generateNodeMoveNumber(move));
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        System.out.println("ERROR");
+                    }
+
+
                 } else {
-                    sequence.addLostGameSequence();
+                    tree.getNode(sequence.getCurrentSequence()).isLoser();
                     break;
                 }
 
-                if(allCoordinatesFilled()){
+                if (allCoordinatesFilled()) {
                     System.out.println("It's a draw!");
+
+                    try{
+                        tree.getNode(sequence.getCurrentSequence()).isTie();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        System.out.println("ERROR");
+                    }
                     break;
                 }
 
                 if (!gameFinished()) {
                     bot.isThinking();
                     int move = bot.move();
-                    sequence.addDecission(move);
+                    sequence.addDecission(generateNodeMoveNumber(move));
                 } else {
-                    sequence.addWonGameSequence();
+                    tree.getNode(sequence.getCurrentSequence()).isWinner();
                     break;
                 }
 
-                if(allCoordinatesFilled()){
+                if (allCoordinatesFilled()) {
                     System.out.println("It's a draw!");
+                    tree.getNode(sequence.getCurrentSequence()).isTie();
                     break;
                 }
 
             }
+
+            try {
+                Thread.sleep(10);
+            } catch (Exception e) {
+
+            }
+            System.out.println("");
+            System.out.println("");
+            System.out.println("RESTARTING GAME");
+            System.out.println("");
+            System.out.println("");
             grid.resetGrid();
             sequence.resetCurrentSequence();
         }
@@ -253,7 +323,6 @@ public class Game {
         return false;
     }
 
-
     public static Game getInstance() {
         if (instance == null) {
             instance = new Game(boardSize);
@@ -266,5 +335,6 @@ public class Game {
         Game game = Game.getInstance();
         game.startGame();
 
+        //Tree tree = new Tree();
     }
 }
