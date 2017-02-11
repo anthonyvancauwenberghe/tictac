@@ -2,6 +2,7 @@
  * Created by tony on 10/02/2017.
  */
 public class Game {
+
     private static int boardSize = 3;
     private static Game instance = null;
 
