@@ -45,6 +45,10 @@ public class Grid {
         return this.grid.get(x + getSize()*y);
     }
 
+    public Coordinate getCoordinate(Coordinate coordinate) {
+        return this.grid.get(coordinate.getX() + getSize()*coordinate.getY());
+    }
+
     public String toString() {
         int[][] grid = generateGridArray();
         StringBuilder stringBuilder = new StringBuilder();

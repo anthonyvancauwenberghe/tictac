@@ -9,9 +9,10 @@ public class Human extends Player {
 
         /* Human has PlayerID 2! */
         this.playerID = 2;
+        this.name = "Human";
     }
 
-    public int move() {
+    public Coordinate generateMove() {
         Scanner reader = new Scanner(System.in);
 
         System.out.println("");
@@ -22,24 +23,18 @@ public class Human extends Player {
         System.out.println("Enter Y location");
         int y = reader.nextInt();
 
-        verifyMove(x, y);
-
-        System.out.println(getGrid().toString());
-        return x + getGrid().getSize()*y;
+        return new Coordinate(x, y);
     }
 
     @Override
-    protected void verifyMove(int x, int y) {
-        if (getGrid().getCoordinate(x, y).getContent() == 0)
-            fillCoordinate(x, y, getPlayerID());
-        else {
+    public boolean moveIsValid(Coordinate coord) {
+        if (!(getGrid().getCoordinate(coord).getContent() == 0)) {
             System.out.println("");
             System.out.println("********************* ERROR ************************ ");
             System.out.println("Location Already taken, Please Re-Enter Coordinates ");
             System.out.println("");
-            move();
+            return false;
         }
-
-
+        return true;
     }
 }
