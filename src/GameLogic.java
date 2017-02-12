@@ -18,7 +18,7 @@ public class GameLogic {
     private Game currentGame;
 
     private int amountOfGamesPlayed;
-    private int maxAmountOfGamesToPlay = 10;
+    private int maxAmountOfGamesToPlay = 10000000;
     private int breakTimeBetweenGames = 0; //break in MS between games
 
     public GameLogic(int boardSize, Player player1, Player player2) {
@@ -94,6 +94,53 @@ public class GameLogic {
             gameHistory.save();
     }
 
+    public void simulate() {
+
+        while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
+            this.currentGame = new Game();
+
+            if(amountOfGamesPlayed %1000 ==0)
+                System.out.println(amountOfGamesPlayed);
+            while (true) {
+            /* PROCESS HUMAN MOVES */
+                int humanMove = player1.move();
+                currentGame.addMove(humanMove);
+
+                /* CHECK IF GAME HAS ENDED */
+                if (gameFinished()) {
+                    currentGame.botIsLoser();
+                    GameHistory.getInstance().add(currentGame);
+                    break;
+                } else if (allCoordinatesFilled()) {
+                    currentGame.isDraw();
+                    GameHistory.getInstance().add(currentGame);
+                    break;
+                }
+
+                /* PROCESS BOT MOVES */
+                int botMove = player2.move();
+                currentGame.addMove(botMove);
+
+                /* CHECK IF GAME HAS ENDED */
+                if (gameFinished()) {
+                    currentGame.botIsWinner();
+                    GameHistory.getInstance().add(currentGame);
+                    break;
+                } else if (allCoordinatesFilled()) {
+                    currentGame.isDraw();
+                    GameHistory.getInstance().add(currentGame);
+                    break;
+                }
+            }
+
+            amountOfGamesPlayed++;
+            grid.resetGrid();
+
+        }
+        GameHistory.getInstance().save();
+    }
+
+
     public void gameLoop() {
 
         while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
@@ -117,6 +164,8 @@ public class GameLogic {
                     break;
                 }
 
+                System.out.println(getGrid().toString());
+
                 /* PROCESS BOT MOVES */
                 int botMove = player2.move();
                 currentGame.addMove(botMove);
@@ -133,6 +182,8 @@ public class GameLogic {
                     GameHistory.getInstance().add(currentGame);
                     break;
                 }
+
+                System.out.println(getGrid().toString());
             }
             System.out.println(currentGame.getFormattedName());
 
@@ -334,7 +385,6 @@ public class GameLogic {
 
         /* CHECK FOR 3 SEQUENCES */
         if (horizontalRowSequence() || verticalRowSequence() || diagonalRowSequence()) {
-            System.out.println("GameLogic Finished");
             return true;
         }
 

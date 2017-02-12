@@ -23,11 +23,8 @@ abstract public class Player {
 
         fillCoordinate(coord, getPlayerID());
 
-        System.out.println(getGrid().toString());
-
         int move = coord.toInt();
-        //System.out.println("Move: x: " + coord.getX() + " y: " + coord.getY());
-        //System.out.println("move: " + move);
+
         return move;
     }
 

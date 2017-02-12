@@ -22,7 +22,7 @@ public class Application {
         Player bot2 = new RandomBot(2);
 
         GameLogic.createInstance(boardsize, bot1, bot2);
-        GameLogic.getInstance().gameLoop();
+        GameLogic.getInstance().simulate();
 
     }
 
@@ -33,7 +33,7 @@ public class Application {
         Player human = new Human();
         Player bot = new AIBot();
 
-        app.start(boardsize, human, bot);
-        //app.trainBot();
+        //app.start(boardsize, human, bot);
+        app.trainBot();
     }
 }
