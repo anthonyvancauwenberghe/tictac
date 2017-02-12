@@ -4,19 +4,19 @@ import java.util.ArrayList;
  * Created by tony on 10/02/2017.
  */
 public class Game {
-    private ArrayList<Integer> sequence = new ArrayList<>();
+    private ArrayList<Integer> gameMoves = new ArrayList<>();
     private int weight;
 
     public void addMove(int number) {
-        sequence.add(number);
+        gameMoves.add(number);
     }
 
     public void reset() {
-        sequence.clear();
+        gameMoves.clear();
     }
 
-    public ArrayList<Integer> getSequence() {
-        return sequence;
+    public ArrayList<Integer> getGameMoves() {
+        return gameMoves;
     }
 
     public int getWeight(){
@@ -26,7 +26,7 @@ public class Game {
     public int getMove(int moveNumber) {
 
         try {
-            return sequence.get(moveNumber);
+            return gameMoves.get(moveNumber);
         } catch (IndexOutOfBoundsException e) {
             System.out.println("ERROR: The GameLogic does not contain that many moves! returning -1");
             return -1;
@@ -38,16 +38,19 @@ public class Game {
     }
 
     public String toString(){
-        String string = getSequence() + " " + getWeight();
+        String string = getGameMoves() + " " + getWeight();
         return string;
     }
 
     public int[] toArray() {
-        int size = sequence.size();
+        int size = gameMoves.size();
         int[] arraySequence = new int[size];
-        int i = 0;
 
-        for (int number : sequence) {
+        if(size == 0)
+            return arraySequence;
+
+        int i = 0;
+        for (int number : gameMoves) {
             arraySequence[0] = number;
             i++;
         }

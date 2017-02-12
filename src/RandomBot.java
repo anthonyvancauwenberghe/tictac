@@ -11,7 +11,7 @@ public class RandomBot extends Bot {
     }
 
     public RandomBot(int id){
-        super();
+        super(id);
     }
 
     public Coordinate generateMove() {

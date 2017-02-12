@@ -26,8 +26,8 @@ abstract public class Player {
         System.out.println(getGrid().toString());
 
         int move = coord.toInt();
-        System.out.println("Move: x: " + coord.getX() + " y: " + coord.getY());
-        System.out.println("move: " + move);
+        //System.out.println("Move: x: " + coord.getX() + " y: " + coord.getY());
+        //System.out.println("move: " + move);
         return move;
     }
 

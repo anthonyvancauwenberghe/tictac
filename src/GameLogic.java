@@ -13,23 +13,23 @@ public class GameLogic {
     private Player player1;
     private Player player2;
 
-    private GameHistory pastGames;
+    private GameHistory gameHistory;
     private Game currentGame;
 
     private int amountOfGamesPlayed;
-    private int maxAmountOfGamesToPlay=500;
-    private int breakBetweenGames = 100; //break in MS between games
+    private int maxAmountOfGamesToPlay = 200000;
+    private int breakBetweenGames = 5; //break in MS between games
 
-    public GameLogic(int boardSize,Player player1, Player player2) {
+    public GameLogic(int boardSize, Player player1, Player player2) {
         this.boardSize = boardSize;
         this.grid = new Grid(boardSize);
 
         this.player1 = player1;
         this.player2 = player2;
 
-        this.pastGames = new GameHistory();
-        this.currentGame = new Game();
-        this.amountOfGamesPlayed=0;
+        this.gameHistory = new GameHistory();
+
+        this.amountOfGamesPlayed = 0;
 
         System.out.println(this.grid.toString());
     }
@@ -42,76 +42,70 @@ public class GameLogic {
         return currentGame;
     }
 
-    public GameHistory getPastGames() {
-        return this.pastGames;
+    public GameHistory getGameHistory() {
+        return this.gameHistory;
     }
 
 
     public void gameLoop() {
 
-        while (amountOfGamesPlayed<maxAmountOfGamesToPlay) {
+        while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
+            this.currentGame = new Game();
 
-
+            try {
+                gameHistory.save();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            while (true) {
             /* PROCESS HUMAN MOVES */
-            int humanMove = player1.move();
-            currentGame.addMove(humanMove);
+                int humanMove = player1.move();
+                currentGame.addMove(humanMove);
 
                 /* CHECK IF GAME HAS ENDED */
-            if (gameFinished()) {
-                System.out.println(player1.getName() + " HAS WON");
-                currentGame.botIsLoser();
-                pastGames.addGame(currentGame);
-                break;
-            } else if (allCoordinatesFilled()) {
-                currentGame.isDraw();
-                pastGames.addGame(currentGame);
-                System.out.println("It's a draw!");
-                break;
-            }
+                if (gameFinished()) {
+                    System.out.println(player1.getName() + " HAS WON");
+                    currentGame.botIsLoser();
+                    gameHistory.addGame(currentGame);
+                    break;
+                } else if (allCoordinatesFilled()) {
+                    System.out.println("It's a draw!");
+                    currentGame.isDraw();
+                    gameHistory.addGame(currentGame);
+                    break;
+                }
 
                 /* PROCESS BOT MOVES */
-            int botMove = player2.move();
-            currentGame.addMove(botMove);
+                int botMove = player2.move();
+                currentGame.addMove(botMove);
 
                 /* CHECK IF GAME HAS ENDED */
-            if (gameFinished()) {
-                currentGame.botIsWinner();
-                pastGames.addGame(currentGame);
-                System.out.println(player2.getName() + " HAS WON");
-                break;
-            } else if (allCoordinatesFilled()) {
-                currentGame.isDraw();
-                pastGames.addGame(currentGame);
-                System.out.println("It's a draw!");
-                break;
+                if (gameFinished()) {
+                    System.out.println(player2.getName() + " HAS WON");
+                    currentGame.botIsWinner();
+                    gameHistory.addGame(currentGame);
+
+                    break;
+                } else if (allCoordinatesFilled()) {
+                    System.out.println("It's a draw!");
+                    currentGame.isDraw();
+                    gameHistory.addGame(currentGame);
+                    break;
+                }
+            }
+            System.out.println(currentGame.toString());
+
+            amountOfGamesPlayed++;
+            grid.resetGrid();
+
+            /* add Break */
+            try {
+                Thread.sleep(breakBetweenGames);
+            } catch (Exception e) {
+
             }
 
         }
-
-        try {
-            pastGames.save();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        amountOfGamesPlayed++;
-
-
-        /* add 10ms Break */
-        try {
-            Thread.sleep(breakBetweenGames);
-        } catch (Exception e) {
-
-        }
-
-        if(amountOfGamesPlayed<maxAmountOfGamesToPlay)
-        restartGame();
-    }
-
-    public void restartGame(){
-        currentGame.reset();
-        grid.resetGrid();
-        gameLoop();
     }
 
     private boolean verticalRowSequence() {
@@ -308,7 +302,7 @@ public class GameLogic {
         return instance;
     }
 
-    public static void createInstance(int boardSize,Player player1, Player player2) {
+    public static void createInstance(int boardSize, Player player1, Player player2) {
         instance = new GameLogic(boardSize, player1, player2);
     }
 

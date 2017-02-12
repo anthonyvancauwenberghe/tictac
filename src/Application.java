@@ -32,7 +32,11 @@ public class Application {
         Player human = new Human();
         Player bot = new RandomBot();
 
-        app.start(boardsize, human, bot);
+        //app.start(boardsize, human, bot);
+
+
+
+        app.trainBot();
 
 
     }

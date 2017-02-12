@@ -21,41 +21,21 @@ public class GameHistory {
     }
 
     public void addGame(Game game) {
-
+        System.out.println("ADDED GAME");
         if (!gameExistsAlready(game))
             games.add(game);
     }
 
     public boolean gameExistsAlready(Game toAddGame) {
         for (Game game : games) {
-            if (compareGames(toAddGame, game)) {
+
+            if (toAddGame.toString().equals(game.toString())) {
                 System.out.println("Game Already in History");
                 return true;
             }
+
         }
         return false;
     }
-
-    public boolean compareGames(Game game1, Game game2) {
-        int[] array1 = game1.toArray();
-        int[] array2 = game2.toArray();
-
-        boolean b = true;
-        if (array1 != null && array2 != null) {
-            if (array1.length != array2.length)
-                b = false;
-            else
-                for (int i = 0; i < array2.length; i++) {
-                    if (array2[i] != array1[i]) {
-                        b = false;
-                    }
-                }
-        } else {
-            b = false;
-        }
-
-        return b;
-    }
-
 
 }
