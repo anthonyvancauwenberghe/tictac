@@ -1,4 +1,4 @@
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  * Created by tony on 10/02/2017.
@@ -50,16 +50,12 @@ public class GameLogic {
     public void gameLoop() {
 
         while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
-            this.currentGame = new Game();
+            this.currentGame = new Game(new ArrayList<>(), 0);
             System.out.println("");
             System.out.println("Amount of games played: " + amountOfGamesPlayed);
             System.out.println("");
             if (amountOfGamesPlayed % 100 == 0) {
-                try {
-                    gameHistory.save();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                GameHistory.getInstance().save();
             }
             while (true) {
             /* PROCESS HUMAN MOVES */
@@ -70,12 +66,12 @@ public class GameLogic {
                 if (gameFinished()) {
                     System.out.println(player1.getName() + " HAS WON");
                     currentGame.botIsLoser();
-                    gameHistory.addGame(currentGame);
+                    GameHistory.getInstance().add(currentGame);
                     break;
                 } else if (allCoordinatesFilled()) {
                     System.out.println("It's a draw!");
                     currentGame.isDraw();
-                    gameHistory.addGame(currentGame);
+                    GameHistory.getInstance().add(currentGame);
                     break;
                 }
 
@@ -87,17 +83,16 @@ public class GameLogic {
                 if (gameFinished()) {
                     System.out.println(player2.getName() + " HAS WON");
                     currentGame.botIsWinner();
-                    gameHistory.addGame(currentGame);
-
+                    GameHistory.getInstance().add(currentGame);
                     break;
                 } else if (allCoordinatesFilled()) {
                     System.out.println("It's a draw!");
                     currentGame.isDraw();
-                    gameHistory.addGame(currentGame);
+                    GameHistory.getInstance().add(currentGame);
                     break;
                 }
             }
-            System.out.println(currentGame.toString());
+            System.out.println(currentGame.getFormattedName());
 
             amountOfGamesPlayed++;
             grid.resetGrid();
@@ -111,11 +106,7 @@ public class GameLogic {
                 }
             }
         }
-        try {
-            gameHistory.save();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        GameHistory.getInstance().save();
     }
 
     private boolean verticalRowSequence() {

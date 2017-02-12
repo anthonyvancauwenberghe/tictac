@@ -27,7 +27,6 @@ public class Application {
 
     public static void main(String args[]) {
         Application app = new Application();
-
         int boardsize = 3;
         Player human = new Human();
         Player bot = new RandomBot();
@@ -35,9 +34,7 @@ public class Application {
         //app.start(boardsize, human, bot);
 
 
-
+        GameHistory.getInstance().refresh();
         app.trainBot();
-
-
     }
 }
