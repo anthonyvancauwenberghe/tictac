@@ -17,8 +17,8 @@ public class GameLogic {
     private Game currentGame;
 
     private int amountOfGamesPlayed;
-    private int maxAmountOfGamesToPlay = 200000;
-    private int breakBetweenGames = 5; //break in MS between games
+    private int maxAmountOfGamesToPlay = 1000000;
+    private int breakTimeBetweenGames = 0; //break in MS between games
 
     public GameLogic(int boardSize, Player player1, Player player2) {
         this.boardSize = boardSize;
@@ -51,11 +51,15 @@ public class GameLogic {
 
         while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
             this.currentGame = new Game();
-
-            try {
-                gameHistory.save();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            System.out.println("");
+            System.out.println("Amount of games played: " + amountOfGamesPlayed);
+            System.out.println("");
+            if (amountOfGamesPlayed % 100 == 0) {
+                try {
+                    gameHistory.save();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
             while (true) {
             /* PROCESS HUMAN MOVES */
@@ -98,13 +102,19 @@ public class GameLogic {
             amountOfGamesPlayed++;
             grid.resetGrid();
 
+            if (breakTimeBetweenGames != 0) {
             /* add Break */
-            try {
-                Thread.sleep(breakBetweenGames);
-            } catch (Exception e) {
+                try {
+                    Thread.sleep(breakTimeBetweenGames);
+                } catch (Exception e) {
 
+                }
             }
-
+        }
+        try {
+            gameHistory.save();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

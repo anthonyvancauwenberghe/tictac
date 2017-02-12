@@ -16,14 +16,21 @@ public class GameHistory {
         pw.close();
     }
 
+    public void load() throws FileNotFoundException {
+        //TODO
+    }
+
     public ArrayList getGames() {
         return games;
     }
 
     public void addGame(Game game) {
-        System.out.println("ADDED GAME");
-        if (!gameExistsAlready(game))
+
+        if (!gameExistsAlready(game)){
             games.add(game);
+            System.out.println("ADDED GAME");
+        }
+
     }
 
     public boolean gameExistsAlready(Game toAddGame) {
