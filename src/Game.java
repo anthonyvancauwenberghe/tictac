@@ -7,6 +7,19 @@ public class Game {
     private ArrayList<Integer> gameMoves = new ArrayList<>();
     private int weight;
 
+    public Game(){
+
+    }
+
+    public Game(int[] array, int weight){
+        this.weight = weight;
+
+        for(int i=0; i<array.length; i++){
+            gameMoves.add(array[i]);
+        }
+
+    }
+
     public void addMove(int number) {
         gameMoves.add(number);
     }

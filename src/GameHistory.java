@@ -17,7 +17,11 @@ public class GameHistory {
     }
 
     public void load() throws FileNotFoundException {
-        //TODO
+        int[] array= new int[1000]; //TODO REPLACE NEW INT WITH THE VALUE FROM THE JSON
+        int weight=0; //TODO REPLACE 0 WITH THE VALUE FROM THE JSON
+
+        Game game = new Game(array,weight);
+        games.add(game);
     }
 
     public ArrayList getGames() {
