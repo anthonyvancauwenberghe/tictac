@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -5,10 +6,15 @@ import java.util.List;
  */
 public class Game {
 
-    private final List<Integer> gameMoves;
+    private final ArrayList<Integer> gameMoves;
     private int weight;
 
-    public Game(List<Integer> gameMoves, int weight) {
+    public Game(){
+        this.gameMoves = new ArrayList<Integer>();
+        this.weight = 0;
+    }
+
+    public Game(ArrayList<Integer> gameMoves, int weight) {
         this.gameMoves = gameMoves;
         this.weight = weight;
     }
@@ -24,6 +30,22 @@ public class Game {
     public List<Integer> getGameMoves() {
         return gameMoves;
     }
+
+    public int getMove(int moveNumber){
+        return gameMoves.get(moveNumber);
+    }
+
+    public int[] toArray(){
+            int size = gameMoves.size();
+            int[] movesArray = new int[size];
+            int i=0;
+            for (Integer move : gameMoves) {
+                movesArray[i]= move;
+                i++;
+            }
+
+            return movesArray;
+        }
 
     public int getWeight() {
         return weight;

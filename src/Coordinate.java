@@ -14,6 +14,12 @@ public class Coordinate {
         this.content = 0;
     }
 
+    public Coordinate(int position){
+        this.x = position % GameLogic.getInstance().getGrid().getSize();
+        this.y = (position-x)/GameLogic.getInstance().getGrid().getSize();
+        this.content = 0;
+    }
+
     public int toInt(){
         return getX()+ GameLogic.getInstance().getGrid().getSize()*getY();
     }

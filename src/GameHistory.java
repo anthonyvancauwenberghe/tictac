@@ -12,32 +12,33 @@ import java.util.List;
  */
 public class GameHistory {
 
-    private List<Game> games = getGamesList();
+    private ArrayList<Game> games;
 
     public static GameHistory getInstance() {
         return InstanceHolder.instance;
     }
 
-    public void refresh() {
-        games = getGamesList();
+    public ArrayList<Game> getGames() {
+        return games;
     }
 
-    private List<Game> getGamesList() {
+
+    public void load() {
         try (BufferedReader reader = new BufferedReader(new FileReader(Constants.GAME_HISTORY))) {
-            final List<Game> games = new Gson().fromJson(new JsonParser().parse(reader), new TypeToken<List<Game>>() {}.getType());
+            final ArrayList<Game> games = new Gson().fromJson(new JsonParser().parse(reader), new TypeToken<ArrayList<Game>>() {}.getType());
             reader.close();
-            return games;
+            this.games = games;
         } catch (IOException ex) {
             ex.printStackTrace();
-            return new ArrayList<>();
+            this.games = new ArrayList<>();
         }
     }
 
     public void save() {
-        Environment.createParentDirectories(Constants.GAME_HISTORY);
-        Environment.createFiles(Constants.GAME_HISTORY);
+        //Environment.createParentDirectories(Constants.GAME_HISTORY);
+        //Environment.createFiles(Constants.GAME_HISTORY);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.GAME_HISTORY))) {
-            writer.write(new GsonBuilder().create().toJson(games, new TypeToken<List<Game>>() {}.getType()));
+            writer.write(new GsonBuilder().create().toJson(games, new TypeToken<ArrayList<Game>>() {}.getType()));
             writer.newLine();
             writer.flush();
             writer.close();
@@ -52,6 +53,7 @@ public class GameHistory {
         if (games == null) {
             games = new ArrayList<>();
         }
+
         if (!games.contains(game)) {
             games.add(game);
         }

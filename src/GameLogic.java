@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,7 @@ public class GameLogic {
     private Game currentGame;
 
     private int amountOfGamesPlayed;
-    private int maxAmountOfGamesToPlay = 1000000;
+    private int maxAmountOfGamesToPlay = 10;
     private int breakTimeBetweenGames = 0; //break in MS between games
 
     public GameLogic(int boardSize, Player player1, Player player2) {
@@ -47,16 +48,57 @@ public class GameLogic {
     }
 
 
+
+    public void run() {
+        while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
+            this.currentGame = new Game();
+            System.out.println(amountOfGamesPlayed);
+
+            while (true) {
+            /* PROCESS HUMAN MOVES */
+                int humanMove = player1.move();
+                currentGame.addMove(humanMove);
+
+                /* CHECK IF GAME HAS ENDED */
+                if (gameFinished()) {
+                    currentGame.botIsLoser();
+                    gameHistory.add(currentGame);
+                    break;
+                } else if (allCoordinatesFilled()) {
+                    currentGame.isDraw();
+                    gameHistory.add(currentGame);
+                    break;
+                }
+
+                /* PROCESS BOT MOVES */
+                int botMove = player2.move();
+                currentGame.addMove(botMove);
+
+                /* CHECK IF GAME HAS ENDED */
+                if (gameFinished()) {
+                    currentGame.botIsWinner();
+                    gameHistory.add(currentGame);
+
+                    break;
+                } else if (allCoordinatesFilled()) {
+                    currentGame.isDraw();
+                    gameHistory.add(currentGame);
+                    break;
+                }
+            }
+
+            amountOfGamesPlayed++;
+            grid.resetGrid();
+
+        }
+            gameHistory.save();
+    }
+
     public void gameLoop() {
 
         while (amountOfGamesPlayed < maxAmountOfGamesToPlay) {
-            this.currentGame = new Game(new ArrayList<>(), 0);
-            System.out.println("");
-            System.out.println("Amount of games played: " + amountOfGamesPlayed);
-            System.out.println("");
-            if (amountOfGamesPlayed % 100 == 0) {
-                GameHistory.getInstance().save();
-            }
+            this.currentGame = new Game();
+
             while (true) {
             /* PROCESS HUMAN MOVES */
                 int humanMove = player1.move();

@@ -11,6 +11,7 @@ public class Application {
         System.out.println("");
 
         GameLogic.createInstance(boardsize, player1, player2);
+        GameLogic.getInstance().getGameHistory().load();
         GameLogic.getInstance().gameLoop();
 
     }
@@ -27,14 +28,12 @@ public class Application {
 
     public static void main(String args[]) {
         Application app = new Application();
+
         int boardsize = 3;
         Player human = new Human();
-        Player bot = new RandomBot();
+        Player bot = new AIBot();
 
-        //app.start(boardsize, human, bot);
-
-
-        GameHistory.getInstance().refresh();
-        app.trainBot();
+        app.start(boardsize, human, bot);
+        //app.trainBot();
     }
 }
