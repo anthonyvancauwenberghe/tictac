@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by tony on 10/02/2017.
@@ -23,11 +22,11 @@ public class Game {
         gameMoves.add(number);
     }
 
-    public String getFormattedName() {
+    public String toString() {
         return getGameMoves() + " " + getWeight();
     }
 
-    public List<Integer> getGameMoves() {
+    public ArrayList<Integer> getGameMoves() {
         return gameMoves;
     }
 
@@ -61,6 +60,23 @@ public class Game {
 
     public void botIsLoser() {
         this.weight = -100;
+    }
+
+    public Grid toGrid(){
+        int [] moves = toArray();
+        Grid grid = new Grid(GameLogic.getInstance().getGrid().getSize());
+
+        for(int i=0; i<moves.length; i++){
+            Coordinate coord = new Coordinate(moves[i]);
+            if(i%2 == 0){
+                grid.fillCoordinate(coord,GameLogic.getInstance().player1.getPlayerID());
+            }
+            else{
+                grid.fillCoordinate(coord,GameLogic.getInstance().player2.getPlayerID());
+            }
+        }
+        return grid;
+
     }
 
 }

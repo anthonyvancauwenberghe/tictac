@@ -5,27 +5,46 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * @author Daniel
+ * Created by tony on 10/02/2017.
  */
+
 public class GameHistory {
 
     private ArrayList<Game> games;
+    private String filePath = "./Training_Data/History";
 
     public static GameHistory getInstance() {
         return InstanceHolder.instance;
     }
 
     public ArrayList<Game> getGames() {
+
+        if (games == null)
+            return null;
+
         return games;
+    }
+
+    public File getFile() {
+        File file = new File(filePath + GameLogic.getInstance().getGrid().getSize() + "x" + GameLogic.getInstance().getGrid().getSize() + ".json");
+        try {
+            if (!file.exists())
+                file.createNewFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 
 
     public void load() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(Constants.GAME_HISTORY))) {
-            final ArrayList<Game> games = new Gson().fromJson(new JsonParser().parse(reader), new TypeToken<ArrayList<Game>>() {}.getType());
+        System.out.println("Please Be patient Loading Training Data");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(getFile()))) {
+            final ArrayList<Game> games = new Gson().fromJson(new JsonParser().parse(reader), new TypeToken<ArrayList<Game>>() {
+            }.getType());
             reader.close();
             this.games = games;
         } catch (IOException ex) {
@@ -35,10 +54,9 @@ public class GameHistory {
     }
 
     public void save() {
-        //Environment.createParentDirectories(Constants.GAME_HISTORY);
-        //Environment.createFiles(Constants.GAME_HISTORY);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.GAME_HISTORY))) {
-            writer.write(new GsonBuilder().create().toJson(games, new TypeToken<ArrayList<Game>>() {}.getType()));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(getFile()))) {
+            writer.write(new GsonBuilder().create().toJson(games, new TypeToken<ArrayList<Game>>() {
+            }.getType()));
             writer.newLine();
             writer.flush();
             writer.close();
